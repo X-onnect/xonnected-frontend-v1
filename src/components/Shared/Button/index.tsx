@@ -7,13 +7,20 @@ interface buttonProps {
   onClick?: () => any
   colorScheme?: 'normal' | 'white'
   className?: string
+  size?: 'lg' | 'md'
 }
-export function Button({children, onClick, colorScheme, className} : buttonProps){
+export function Button({children, onClick, colorScheme, className, size} : buttonProps){
+  const classes = []
+  classes.push(styles.button)
+  if(colorScheme === 'white') classes.push(styles.white)
+  if(size === 'md') classes.push(styles.md)
+  if(className) classes.push(className)
+
   return(
     <div 
-      className={colorScheme === 'white' ? classnames([styles.button, styles.white]) : styles.button}
+      className={classnames(classes)}
       onClick={onClick}
-      >
+    >
       <p className={styles.btnText}>
         {children}
       </p>
