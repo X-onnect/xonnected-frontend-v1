@@ -1,4 +1,4 @@
-import { BigLogo } from 'components/Shared'
+import { BigLogo, Button } from 'components/Shared'
 import styles from './index.module.scss'
 
 export function WelcomeScreen(){
@@ -6,7 +6,9 @@ export function WelcomeScreen(){
     <div className={styles.wrapper}>
       <BigLogo />
       <div className={styles.intro}>
-        <p>Welcome</p>
+        <p className={styles.welcomeText}>Welcome</p>
+        <Button colorScheme='normal'>Sign In</Button>
+        <Button colorScheme='white'>Sign Up</Button>
       </div>
     </div>
   )

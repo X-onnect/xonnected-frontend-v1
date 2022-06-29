@@ -1,16 +1,19 @@
-import styles from 'index.module.scss'
+import styles from './index.module.scss'
 import { BsArrowRight } from 'react-icons/bs'
+import classnames from 'classnames'
 
 interface buttonProps {
   children: JSX.Element | JSX.Element[] | string
   onClick?: () => any
-  size: 'small' | 'large'
-  colorScheme: 'normal' | 'white'
+  colorScheme?: 'normal' | 'white'
   className?: string
 }
-export function Button({children, onClick, size, colorScheme, className} : buttonProps){
+export function Button({children, onClick, colorScheme, className} : buttonProps){
   return(
-    <div className={styles.button}>
+    <div 
+      className={colorScheme === 'white' ? classnames([styles.button, styles.white]) : styles.button}
+      onClick={onClick}
+      >
       <p className={styles.btnText}>
         {children}
       </p>

@@ -3,7 +3,9 @@ import { WelcomeScreen } from "./WelcomeScreen";
 
 export function HomePage(){
   return(
-    // <SplashScreen />
+    <>
+    <SplashScreen />
     <WelcomeScreen />
+    </>
   )
 }
