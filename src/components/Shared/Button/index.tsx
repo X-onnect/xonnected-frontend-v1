@@ -1,10 +1,11 @@
 import styles from './index.module.scss'
 import { BsArrowRight } from 'react-icons/bs'
 import classnames from 'classnames'
+import { MouseEventHandler } from 'react'
 
 interface buttonProps {
   children: JSX.Element | JSX.Element[] | string
-  onClick?: () => any
+  onClick?: MouseEventHandler<HTMLElement>
   colorScheme?: 'normal' | 'white'
   className?: string
   size?: 'lg' | 'md'
