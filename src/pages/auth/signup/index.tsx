@@ -1,7 +1,8 @@
+import { SignupPage } from "components";
 
 
 export default function signup(){
   return(
-    <p>Signup Page</p>
+    <SignupPage />
   )
 }

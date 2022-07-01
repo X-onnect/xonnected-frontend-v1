@@ -8,8 +8,9 @@ interface buttonProps {
   colorScheme?: 'normal' | 'white'
   className?: string
   size?: 'lg' | 'md'
+  icon?: JSX.Element
 }
-export function Button({children, onClick, colorScheme, className, size} : buttonProps){
+export function Button({children, onClick, colorScheme, className, size, icon} : buttonProps){
   const classes = []
   classes.push(styles.button)
   if(colorScheme === 'white') classes.push(styles.white)
@@ -24,7 +25,9 @@ export function Button({children, onClick, colorScheme, className, size} : butto
       <p className={styles.btnText}>
         {children}
       </p>
-      <BsArrowRight />
+      {
+        icon ? icon : <BsArrowRight />
+      }
     </div>
   )
 }
