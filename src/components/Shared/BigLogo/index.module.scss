@@ -1,0 +1,33 @@
+.wrapper{
+  flex: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../../../../public/img/icons/bg2.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  @media (min-width: 768px) {
+    background-image: url('../../../../public/img/icons/bg1.png');
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logoBig{
+    display: none;
+    @media (min-width: 768px) {
+      display: block;
+      margin-left: 20px;
+    }
+  }
+
+  .logoSmall{
+    display: block;
+    margin-bottom: 200px;
+    margin-right: 30px;
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+}
+
