@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@300&family=Noto+Sans&display=swap');
+
+.desktop-wrapper {
+    width: 100vw;
+    min-height: 100vh;
+
+    @media (min-width: 768px) {
+        background-image: url("../../../public/img/icons/bg1.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position-x: -45vw;
+    }
+}
