@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@300&family=Noto+Sans&display=swap');
+
+.wrapper{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.intro{
+  flex: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .welcomeText{
+    font-family: 'Montserrat';
+    color: #484848;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 400;
+    text-align: center;
+    margin: 20px 0;
+    @media (min-width: 768px) {
+      font-size: 40px;
+      margin: 40px 0;
+    }
+  }
+}
