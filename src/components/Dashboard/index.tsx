@@ -1,13 +1,6 @@
-import * as S from './styles';
-import { Navbar } from '../Navbar';
 
-const Dashboard = () => {
+export const Dashboard = () => {
     return (
-        <S.Wrapper>
-            <Navbar />
-            
-        </S.Wrapper>
+        <p>Dashboard</p>
     )
 };
-
-export default Dashboard;
