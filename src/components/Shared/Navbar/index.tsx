@@ -26,7 +26,7 @@ export const Navbar = () => {
                     size = { 16 }
                 />
 
-                <div className={`${styles['nav-menu']} ${isOpen? styles.hide : ''}`}>
+                <div className={`${styles['nav-menu']} ${!isOpen? styles.hide : ''}`}>
                     <div className={styles['nav-menu-chip']}></div>
 
                     <div className={styles.header}>
@@ -122,7 +122,7 @@ export const Navbar = () => {
                     />
                 </div>
 
-                <div className={`${styles['nav-menu']} ${isOpen? styles.hide : ''}`}>
+                <div className={`${styles['nav-menu']} ${isOpen? '' : styles.hide}`}>
                     <div className={styles['nav-menu-chip']}></div>
 
                     <div className={styles.header}>
