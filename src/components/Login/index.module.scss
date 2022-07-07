@@ -77,4 +77,30 @@
       }
     }
   }
+
+  .errorControl {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    @media (min-width: 768px) {
+      margin-bottom: 20px;
+    }
+
+    label{
+      margin: 5px 0;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 17px;
+      color: tomato;
+      @media (min-width: 768px) {
+        font-size: 14px;
+        line-height: 25px;
+      }
+    }
+  }
+}
+
+img.qr-code {
+  width: 70%;
 }

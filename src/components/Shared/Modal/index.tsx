@@ -7,21 +7,18 @@ interface ModalProps {
   children?: JSX.Element | JSX.Element[] | string
   header?: string
   canClose?: boolean
+  handleClose?: () => any
 }
 
-export function Modal({ children, header, canClose } : ModalProps){
+export function Modal({ children, header, canClose, handleClose } : ModalProps){
 
-  const [ open, setOpen ] = useState(true)
-  const onClose = () => {
-    setOpen(false)
-  }
   return(
     <div 
-      className={ open === true ? styles.wrapper : classNames(styles.wrapper, styles.close)} 
-      >
+      className={ styles.wrapper } 
+    >
       <div className={styles.modal}>
         { 
-          canClose === true && <BsX onClick={onClose}/>
+          canClose === true && <BsX onClick={handleClose}/>
         }
         <p className={styles.header}>{header}</p>
         <div className={styles.content}>
