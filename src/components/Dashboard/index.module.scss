@@ -5,10 +5,11 @@
     min-height: 100vh;
 
     @media (min-width: 768px) {
-        background-image: url("../../../public/img/icons/bg1.png");
+        //background-image: url("../../../public/img/icons/bg1.png");
         background-size: cover;
         background-repeat: no-repeat;
         background-position-x: -45vw;
         background-attachment: fixed;
+        background-color: rgb(238, 237, 237);
     }
 }
