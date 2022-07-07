@@ -3,8 +3,10 @@ import { ChangeEvent, useState } from 'react'
 import styles from './index.module.scss'
 import { string as yupString } from 'yup'
 import { api } from 'helpers'
+import { useRouter } from 'next/router'
 
 export function SignupPage(){
+  const router = useRouter()
   const [ signupDetails, setSignupDetails ] = useState({
     email: {
       value: '',
@@ -28,7 +30,7 @@ export function SignupPage(){
     },
   })
   const [ loading, setLoading ] = useState(false)
-  const [ signupError, setSignupError ] = useState()
+  const [ signupError, setSignupError ] = useState(false)
   const [ signupSuccess, setSignupSuccess ] = useState(false)
 
   const { email, username, password, confirmPassword } = signupDetails
@@ -91,7 +93,9 @@ export function SignupPage(){
     return false
   }
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async () => {
+    setSignupSuccess(false)
+    setSignupError(false)
     setLoading(true);
     const payload = {
       email: email.value,
@@ -99,10 +103,16 @@ export function SignupPage(){
       password: password.value,
     }
 
-    // const response = await api.post('/auth/signup', payload)
-    // if(response.error){
-    //   console.log(response)
-    // }
+    const response = await api.post('auth/signup', payload)
+    setLoading(false)
+    if(response.error){
+      console.log(response)
+      setSignupError(true)
+    }
+    else{
+      console.log(response)
+      setSignupSuccess(true)
+    }
   }
 
   return(
@@ -112,8 +122,26 @@ export function SignupPage(){
         <Modal
           header='SUCCESS'
           buttonText='Log In'
+          onButtonClick={() => {
+            router.push('/auth/login')
+          }}
         >
           Your profile was successfully created. Please go to login page.
+        </Modal>
+      }
+
+      {
+        signupError &&
+        <Modal
+          header='FAILED'
+          buttonText='Retry'
+          canClose={true}
+          handleClose={() => setSignupError(false)}
+          onButtonClick={() => {
+            handleSubmit()
+          }}
+        >
+          There was an error. Kindly check your network and try again.
         </Modal>
       }
       <BigLogo />
