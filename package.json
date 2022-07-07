@@ -23,6 +23,7 @@
     "recoil": "^0.7.3",
     "sass": "^1.53.0",
     "socket.io-client": "^4.5.1",
+    "spinners-react": "^1.0.7",
     "styled-components": "^5.3.5",
     "yup": "^0.32.11"
   },

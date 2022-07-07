@@ -1,7 +1,8 @@
-import { BigLogo, Button } from 'components/Shared'
+import { BigLogo, Button, Modal } from 'components/Shared'
 import { ChangeEvent, useState } from 'react'
 import styles from './index.module.scss'
 import { string as yupString } from 'yup'
+import { api } from 'helpers'
 
 export function SignupPage(){
   const [ signupDetails, setSignupDetails ] = useState({
@@ -26,6 +27,9 @@ export function SignupPage(){
       error: ''
     },
   })
+  const [ loading, setLoading ] = useState(false)
+  const [ signupError, setSignupError ] = useState()
+  const [ signupSuccess, setSignupSuccess ] = useState(false)
 
   const { email, username, password, confirmPassword } = signupDetails
 
@@ -77,8 +81,41 @@ export function SignupPage(){
     }
   }
 
+  const isValid = () => {
+    if((email.touched && !email.error) &&
+    (username.touched && !username.error) && 
+    (password.touched && !password.error) && 
+    (confirmPassword.touched && !confirmPassword.error)){
+      return true
+    } 
+    return false
+  }
+
+  const handleSubmit = async (event: any) => {
+    setLoading(true);
+    const payload = {
+      email: email.value,
+      username: username.value,
+      password: password.value,
+    }
+
+    // const response = await api.post('/auth/signup', payload)
+    // if(response.error){
+    //   console.log(response)
+    // }
+  }
+
   return(
     <div className={styles.wrapper}>
+      {
+        signupSuccess && 
+        <Modal
+          header='SUCCESS'
+          buttonText='Log In'
+        >
+          Your profile was successfully created. Please go to login page.
+        </Modal>
+      }
       <BigLogo />
 
       <div className={styles.formWrapper}>
@@ -130,7 +167,12 @@ export function SignupPage(){
             <p className={styles.error}>{confirmPassword.error}</p>
           </div>
 
-          <Button size="md">Sign Up</Button>
+          <Button 
+            disabled={!isValid() || loading}
+            size="md" 
+            loading={loading}
+            onClick={handleSubmit}
+            >Sign Up</Button>
         </div>
 
       </div>
