@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
+import { PostInterface, User, api } from 'helpers';
+import { useRouter } from 'next/router';
+import classNames from 'classnames';
+
 import { MdOutlineWavingHand } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
 import { TbDotsVertical } from 'react-icons/tb';
@@ -11,14 +15,35 @@ interface ImageDimension {
     width?: string;
 }
 
-export const Post = () => {
+interface PostProp {
+    data: PostInterface;
+}
+
+export const Post = (prop: PostProp) => {
+    const { push } = useRouter();
+    const { data } = prop;
+
     const imageUrl1 = "https://innovate-educate.org/wp-content/uploads/2017/08/chicago-skyline-web.jpg";
-    const imageUrl2 = 'https://i.pinimg.com/originals/fa/b7/d3/fab7d3cd497298b63f2245d0642a2809.jpg'
+    const imageUrl2 = 'https://i.pinimg.com/originals/fa/b7/d3/fab7d3cd497298b63f2245d0642a2809.jpg';
+
+    const profileImagePlaceholder = 'https://th.bing.com/th/id/R.f29406735baf0861647a78ae9c4bf5af?rik=GKTBhov2iZge9Q&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_206976.png&ehk=gCH45Zmryw3yqyqG%2fhd8WDQ53zwYfmC8K9OIkNHP%2fNU%3d&risl=&pid=ImgRaw&r=0';
 
     const [imageStyle, setImageStyle] = useState<ImageDimension>({ width: '100%' });
+    const [userInfo, setUserInfo] = useState<User>();
+
+    const getUserInfo = async () => {
+        const response = await api.get(`user/${data.createdBy}`);
+
+        if (response.statusCode === 401) {
+            push('/');
+        }
+
+        setUserInfo(response);
+    }
 
     useEffect(() => {
-        const image = document.getElementById(imageUrl1);
+        getUserInfo();
+        const image = document.getElementById(data._id);
         const realWidth = image?.clientWidth;  
         const realHeight = image?.clientHeight;
 
@@ -29,18 +54,20 @@ export const Post = () => {
         }
     }, []);
 
+
+
     return (
         <div className={styles['post-wrapper']}>
-            <div className={`${styles['image-holder']}`}>
+            <div className= { classNames(styles['image-holder'], data.image? '' : styles['no-image']) }>
                 <div className={`${styles['profile-banner']}`}>
                     <img 
                         className={styles['profile']}
-                        src = 'https://th.bing.com/th/id/R.9007f637a39e11c190de868c49e63a7d?rik=jxklFZ9rfjk08g&riu=http%3a%2f%2fwallup.net%2fwp-content%2fuploads%2f2016%2f03%2f03%2f319006-portrait-face-women.jpg&ehk=Lh%2fYSglHibTC2R2e5UKQSgDz05rCN8BfPZ6rh%2bK88oU%3d&risl=&pid=ImgRaw&r=0'
+                        src = { profileImagePlaceholder }
                     />
 
                     <div className={styles['profile-name']}>
-                        <p className={styles['display-name']}>Smith Simon</p>
-                        <p className={styles['username']}>@smith_simon</p>
+                        <p className={styles['display-name']}>{userInfo?.username || ''}</p>
+                        <p className={styles['username']}>{userInfo? `@${userInfo.username}` : ''}</p>
                     </div>
 
                     <MdOutlineWavingHand className={styles['icon']} size={25}/>
@@ -48,19 +75,17 @@ export const Post = () => {
                     <TbDotsVertical className={styles['icon']} size={25}/>
                 </div>
 
-                <img src={imageUrl2} alt="post" id={imageUrl1} style={imageStyle}/>
+                { data.image && <img src={data.image} alt="post" id={data._id} style={imageStyle}/>}
             </div>
             <div className={styles['text-holder']}>
                 <div className={styles['heading']}>
                     <p>
-                        #Travel tips
+                        { ' ' }
                     </p>
                 </div>
                 <div className={styles['content']}>
                     <p>
-                        If you needed to use a mobile map or order for a cab in a country that doesn’t speak English, 
-                        how do you intend to stay connected? There are various internet bundles that require a 
-                        purchase of a new sim.......
+                        { data.text }
                     </p>
                 </div>
 

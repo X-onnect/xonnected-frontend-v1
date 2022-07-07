@@ -5,7 +5,7 @@ import { api } from 'helpers';
 import { io } from "socket.io-client";
 import { CONNECTION_STATUS } from 'helpers';
 import { API_URL } from 'helpers';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 
 export function LoginPage(){
