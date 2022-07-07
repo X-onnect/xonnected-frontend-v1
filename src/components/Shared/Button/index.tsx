@@ -2,6 +2,7 @@ import styles from './index.module.scss'
 import { BsArrowRight } from 'react-icons/bs'
 import classnames from 'classnames'
 import { MouseEventHandler } from 'react'
+import { SpinnerCircular } from 'spinners-react'
 
 interface buttonProps {
   children: JSX.Element | JSX.Element[] | string
@@ -11,8 +12,9 @@ interface buttonProps {
   size?: 'lg' | 'md'
   icon?: JSX.Element
   disabled?: boolean
+  loading?: boolean
 }
-export function Button({children, onClick = () => {}, colorScheme, className, size, icon, disabled} : buttonProps){
+export function Button({children, onClick = () => {}, colorScheme, className, loading, size, icon, disabled} : buttonProps){
   const classes = []
   classes.push(styles.button)
   if(colorScheme === 'white') classes.push(styles.white)
@@ -29,7 +31,7 @@ export function Button({children, onClick = () => {}, colorScheme, className, si
         {children}
       </p>
       {
-        icon ? icon : <BsArrowRight />
+        icon ? icon : loading ?  <SpinnerCircular speed={200} color='white' /> : <BsArrowRight />
       }
     </div>
   )

@@ -8,9 +8,11 @@ interface ModalProps {
   header?: string
   canClose?: boolean
   handleClose?: () => any
+  buttonText?: string
+  onButtonClick?: () => any
 }
 
-export function Modal({ children, header, canClose, handleClose } : ModalProps){
+export function Modal({ children, header, canClose, handleClose, buttonText, onButtonClick } : ModalProps){
 
   return(
     <div 
@@ -24,6 +26,9 @@ export function Modal({ children, header, canClose, handleClose } : ModalProps){
         <div className={styles.content}>
           { children }
         </div>
+        {
+          buttonText && <button className={styles.button} onClick={onButtonClick}>{buttonText}</button>
+        }
       </div>
     </div>
   )
