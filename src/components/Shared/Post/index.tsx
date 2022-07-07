@@ -19,8 +19,8 @@ export const Post = () => {
 
     useEffect(() => {
         const image = document.getElementById(imageUrl1);
-        const realWidth = image?.naturalWidth;
-        const realHeight = image?.naturalHeight;
+        const realWidth = image?.clientWidth;  
+        const realHeight = image?.clientHeight;
 
         if (realHeight && realWidth) {
             if (realHeight > realWidth) {
@@ -48,7 +48,7 @@ export const Post = () => {
                     <TbDotsVertical className={styles['icon']} size={25}/>
                 </div>
 
-                <img src={imageUrl1} alt="post" id={imageUrl1} style={imageStyle}/>
+                <img src={imageUrl2} alt="post" id={imageUrl1} style={imageStyle}/>
             </div>
             <div className={styles['text-holder']}>
                 <div className={styles['heading']}>
