@@ -1,4 +1,4 @@
-import { BigLogo, Button } from "components/Shared";
+import { BigLogo, Button, Modal } from "components/Shared";
 import styles from './index.module.scss'
 
 import { GrCheckmark } from 'react-icons/gr'
@@ -6,6 +6,9 @@ import { GrCheckmark } from 'react-icons/gr'
 export function LoginPage(){
   return(
     <div className={styles.wrapper}>
+      <Modal header="Modal Header" canClose>
+        <img src="/img/qr-code-sample.png" />
+      </Modal>
       <BigLogo />
       <div className={styles.formWrapper}>
         <p className={styles.headerText}>Sign In</p>
