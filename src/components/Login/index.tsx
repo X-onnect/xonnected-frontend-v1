@@ -3,14 +3,25 @@ import { BigLogo, Button, Modal } from "components/Shared";
 import styles from './index.module.scss';
 import { api } from 'helpers';
 import { io } from "socket.io-client";
+import { CONNECTION_STATUS } from 'helpers';
 import { API_URL } from 'helpers';
+import { Router, useRouter } from 'next/router';
 
 
 export function LoginPage(){
+  const API_URL_LOCAL = 'http://localhost:5000';
   const [showQrCode, setShowQrCode] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
+
+  const [qrCodeError, setQrCodeError] = useState(false);
+  const [qrCodeSuccess, setQrCodeSuccess] = useState(false);
+
+  const socket = io(API_URL_LOCAL, { autoConnect: false });
+
+  const { push } = useRouter();
 
   const onLogIn = async () => {
     const response = await api.post('auth/login', { email, password });
@@ -19,31 +30,54 @@ export function LoginPage(){
       setIsError(true);
     }
     else {
-      const auth = { authorization: `Bearer ${response.access_token}` };
-      const socket = io(API_URL, { autoConnect: false, auth });
+      const token = response.access_token;
+      localStorage.setItem("accessToken", token);
+      const auth = { Authorization: `Bearer ${token}` };
 
+      socket.auth = auth;
       await socket.connect();
 
-      socket.on("connect", () => {
-        console.log("we're in baby");
-      });
-
-      socket.emit('connect-wallet');
-
       socket.on('connect-wallet', (data) => {
-        console.log(data)
+        const { error, qrCode, status } = data;
+
+        if (error) {
+          setIsError(true);
+        }
+        else {
+          if (qrCode) {
+            setQrCodeUrl(qrCode);
+            setShowQrCode(true);
+
+            if (status === CONNECTION_STATUS.FAILED) {
+              setQrCodeError(true);
+              setQrCodeUrl('');
+              socket.disconnect();
+            }
+
+            if (status === CONNECTION_STATUS.SUCCESSFUL) {
+              setQrCodeSuccess(true);
+              push('/dashboard');
+              socket.disconnect();
+            }
+          }
+        }
+
       })
 
-      socket.on("disconnect", () => {
-        console.log("we're out of this baby");
-      })
+      socket.emit('connect-wallet', 'let me in');
 
-      setShowQrCode(true);
+      socket.on("connect_error", () => {
+        setIsError(true);
+      })
     }
   }
 
   const hideQrCode = () => {
     setShowQrCode(false);
+    setQrCodeError(false);
+    setQrCodeSuccess(false);
+    socket.connect();
+    socket.disconnect();
   }
 
   const canLogIn = () => {
@@ -51,13 +85,19 @@ export function LoginPage(){
     else return false;
   }
 
+  const generateQrCodeMessage = () => {
+    if (qrCodeSuccess) return `Connected to your wallet successfully!`
+    else if (qrCodeError) return `There was an error connecting to your wallet. Please try logging in again.`
+    else return "To proceed, please scan this QR code with your XUMM App."
+  }
+
   return(
     <div className={styles.wrapper}>
 
       {
         showQrCode &&
-        <Modal header="To proceed, please scan this QR code with your XUMM App." canClose handleClose={hideQrCode}>
-          <img src="/img/qr-code-sample.png" className={styles['qr-code']}/>
+        <Modal header={generateQrCodeMessage()} canClose handleClose={hideQrCode}>
+          <img src={qrCodeUrl} className={styles['qr-code']}/>
         </Modal>
       }
 
@@ -87,7 +127,7 @@ export function LoginPage(){
           </div>
 
           <div className={styles.errorControl}>
-            <label>{ isError? `Invalid email and/or password.` : ' ' }</label>
+            <label>{ isError? `Invalid email and/or password. Also check your connection.` : ' ' }</label>
           </div>
 
           <Button size="md" onClick={onLogIn} disabled={!canLogIn()}>Log In</Button>

@@ -2,7 +2,7 @@ export const API_URL = 'https://xonnected.herokuapp.com'
 
 function authHeader(){
   let accessToken: string | null = localStorage.getItem('accessToken');
-  if(typeof(accessToken) === 'string') accessToken = JSON.parse(accessToken);
+
   if(accessToken){
     return {
         'Authorization': 'Bearer ' + accessToken
