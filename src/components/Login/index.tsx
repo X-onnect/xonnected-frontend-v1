@@ -15,15 +15,17 @@ export function LoginPage(){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [qrCodeError, setQrCodeError] = useState(false);
   const [qrCodeSuccess, setQrCodeSuccess] = useState(false);
 
-  const socket = io(API_URL_LOCAL, { autoConnect: false });
+  const socket = io(API_URL, { autoConnect: false });
 
   const { push } = useRouter();
 
   const onLogIn = async () => {
+    setLoading(true);
     const response = await api.post('auth/login', { email, password });
 
     if (response.statusCode === 401) {
@@ -45,6 +47,7 @@ export function LoginPage(){
         }
         else {
           if (qrCode) {
+            setLoading(false);
             setQrCodeUrl(qrCode);
             setShowQrCode(true);
 
@@ -68,6 +71,11 @@ export function LoginPage(){
 
       socket.on("connect_error", () => {
         setIsError(true);
+      })
+
+      socket.on("connect_error", () => {
+        setIsError(true);
+        setShowQrCode(false)
       })
     }
   }
@@ -130,7 +138,7 @@ export function LoginPage(){
             <label>{ isError? `Invalid email and/or password. Also check your connection.` : ' ' }</label>
           </div>
 
-          <Button size="md" onClick={onLogIn} disabled={!canLogIn()}>Log In</Button>
+          <Button size="md" onClick={onLogIn} disabled={!canLogIn()} loading={loading}>Log In</Button>
         </div>
 
       </div>
