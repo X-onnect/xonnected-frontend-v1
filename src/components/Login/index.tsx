@@ -30,6 +30,7 @@ export function LoginPage(){
 
     if (response.statusCode === 401) {
       setIsError(true);
+      setLoading(false);
     }
     else {
       const token = response.access_token;
