@@ -10,18 +10,20 @@ interface buttonProps {
   className?: string
   size?: 'lg' | 'md'
   icon?: JSX.Element
+  disabled?: boolean
 }
-export function Button({children, onClick, colorScheme, className, size, icon} : buttonProps){
+export function Button({children, onClick = () => {}, colorScheme, className, size, icon, disabled} : buttonProps){
   const classes = []
   classes.push(styles.button)
   if(colorScheme === 'white') classes.push(styles.white)
   if(size === 'md') classes.push(styles.md)
   if(className) classes.push(className)
+  if(disabled) classes.push(styles.disabled)
 
   return(
     <div 
       className={classnames(classes)}
-      onClick={onClick}
+      onClick={ (event) => { disabled? '' : onClick(event)}}
     >
       <p className={styles.btnText}>
         {children}

@@ -19,50 +19,70 @@ async function makeRequest(url: string, requestOptions: any){
   return data;
 };
 
-async function get(url: string){
+async function get(path: string){
   const options = {
     method: 'GET',
     headers: authHeader()
   }
-  const fullUrl = API_URL + '/' + url
-  const data = await makeRequest(fullUrl, options)
-  return data
+  const fullUrl = API_URL + '/' + path
+  
+  try {
+    const data = await makeRequest(fullUrl, options)
+    return data
+  } catch (error) {
+    return { error }
+  }
 }
 
-async function post(url: string, body: any){
+async function post(path: string, body: any){
   const token = authHeader()
   const options = {
     method: 'POST',
     headers: { ...token, 'Content-Type': 'application/json'},
     body: JSON.stringify(body)
   }
-  const fullUrl = API_URL + '/' + url
-  const data = await makeRequest(fullUrl, options)
-  return data
+  const fullUrl = API_URL + '/' + path
+  
+  try {
+    const data = await makeRequest(fullUrl, options)
+    return data
+  } catch (error) {
+    return { error }
+  }
 }
 
-async function del(url: string, body: any){
+async function del(path: string, body: any = {}){
   const token = authHeader()
   const options = {
     method: 'DELETE',
     headers: { ...token, 'Content-Type': 'application/json'},
     body: JSON.stringify(body)
   }
-  const fullUrl = API_URL + '/' + url
-  const data = await makeRequest(fullUrl, options)
-  return data
+  const fullUrl = API_URL + '/' + path
+  
+  try {
+    const data = await makeRequest(fullUrl, options)
+    return data
+  } catch (error) {
+    return { error }
+  }
 }
 
-async function put(url: string, body: any){
+async function put(path: string, body: any = {}){
   const token = authHeader()
   const options = {
     method: 'PUT',
     headers: { ...token, 'Content-Type': 'application/json'},
     body: JSON.stringify(body)
   }
-  const fullUrl = API_URL + '/' + url
-  const data = await makeRequest(fullUrl, options)
-  return data
+  const fullUrl = API_URL + '/' + path
+  
+  try {
+    const data = await makeRequest(fullUrl, options)
+    return data
+  } catch (error) {
+    return { error }
+  }
 }
 
 export const api = {
