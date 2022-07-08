@@ -7,8 +7,10 @@ import styles from './index.module.scss'
 interface CreatePostProps {
   isComment?: boolean
   handleClose?: () => any
+  refresh: () => any 
+  id?: string
 }
-export function CreatePost({ isComment, handleClose } : CreatePostProps){
+export function CreatePost({ isComment, handleClose, refresh, id } : CreatePostProps){
   const [ text, setText ] = useState('')
   const [ image, setImage ] = useState('')
   const [ isFree, setIsFree ] = useState(true)
@@ -35,8 +37,8 @@ export function CreatePost({ isComment, handleClose } : CreatePostProps){
   const handleSubmit = async () => {
     setError(false)
     setLoading(true)
-    const payload = isComment ? { image, text } : { image, text, isFree, price: parseInt(price) }
-    const response = await api.post('post', payload)
+    const payload = isComment ? { image, text, isFree: true, price: 0 } : { image, text, isFree, price: parseInt(price) }
+    const response = isComment? await api.post(`post/comment/${id}`, payload): await api.post('post', payload)
     setLoading(false)
     if(response.error) {
       setError(true)
@@ -45,6 +47,7 @@ export function CreatePost({ isComment, handleClose } : CreatePostProps){
       setSuccess(true)
       setTimeout(() => {
         resetState()
+        refresh()
       }, 2000);
     }
   }
@@ -56,7 +59,7 @@ export function CreatePost({ isComment, handleClose } : CreatePostProps){
         <div className={styles.post}>
           <p className={styles.header}>
             {
-              isComment ? 'Make Comment' : 'Create Post'
+              isComment ? 'Comment On Post' : 'Create Post'
             }
           </p>
           {
@@ -88,7 +91,7 @@ export function CreatePost({ isComment, handleClose } : CreatePostProps){
           
           <button onClick={handleSubmit} disabled={ text==='' || loading || success } className={styles['post-button']}>
             {
-              loading ? <SpinnerCircular size={20} speed={200} color={'white'}/> : error ? 'Retry' : 'Post'
+              loading ? <SpinnerCircular size={20} speed={200} color={'white'}/> : error ? 'Retry' : isComment ? 'Comment' : 'Post'
             }
           </button>
           {

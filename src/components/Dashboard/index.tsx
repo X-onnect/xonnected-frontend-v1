@@ -132,7 +132,6 @@ export const Dashboard = () => {
     
     return (
         <div className={styles['desktop-wrapper']}>
-            
             <Navbar />
 
             {
