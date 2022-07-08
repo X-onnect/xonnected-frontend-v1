@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@300&family=Noto+Sans&display=swap');
+
+.desktop-wrapper {
+    max-width: 100vw;
+
+    min-height: 100vh;
+
+    @media (min-width: 768px) {
+        //background-image: url("../../../public/img/icons/bg1.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position-x: -45vw;
+        background-attachment: fixed;
+        background-color: rgb(238, 237, 237);
+    }
+
+    .post-wrapper {
+        width: 100%;
+        padding: 40px;
+        margin-top: 40px;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+    }
+
+    .comments-wrapper {
+        width: 90%;
+        margin-right: -10%;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid #858585;
+    }
+}
