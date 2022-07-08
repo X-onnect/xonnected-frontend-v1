@@ -10,46 +10,48 @@ import { PostSubscriptionDto, API_URL } from 'helpers';
 
 export const Comments = () => {
     const { asPath, push } = useRouter();
-    const postId = asPath.replace('/post/', '');
+    const [postId, setPostId] = useState('');
     const [post, setPost] = useState<PostInterface>();
     const [comments, setComments] = useState<PostInterface[]>([]);
 
-    const fetchAllPosts =  async() => {
-        const response = await api.get(`post/id/${postId}`);
+    const fetchAllPosts =  async(id: string) => {
+        const response = await api.get(`post/id/${id}`);
 
         if (response.statusCode === 401) push('/');
-        console.log(response)
-        const sortedPost = { canBeViewed: response.canBeViewed, ...response.post }
+        const sortedPost = { ...response.post, canBeViewed: response.canBeViewed, comments: response.comments }
 
         setPost(sortedPost);
         setComments(sortedPost.comments);
 
-        console.log(sortedPost);
-        console.log(sortedPost.comments)
+        console.log(response)
     }
 
     const handleLikePost = async (id: string) => {
         const response = await api.get(`post/like/${id}`);
         if (response.statusCode === 401) push('/');
-        fetchAllPosts();
+        fetchAllPosts(postId);
     }
 
     const handleDisLikePost = async (id: string) => {
         const response = await api.get(`post/dislike/${id}`);
         if (response.statusCode === 401) push('/');
-        fetchAllPosts();
+        fetchAllPosts(postId);
     }
 
     const unpackComments = () => {
-        return comments.map((comment) => (
-            <Post 
-                data = { { ...comment, canBeViewed: true } }
-                key = { comment._id }
-                likePost = { handleLikePost }
-                unlikePost = { handleDisLikePost }
-                subscribeToPost = { () => {} }
-            />
-        ))
+        try {
+            return comments.map((comment) => (
+                <Post 
+                    data = { { ...comment, canBeViewed: true } }
+                    key = { comment._id }
+                    likePost = { handleLikePost }
+                    unlikePost = { handleDisLikePost }
+                    subscribeToPost = { () => {} }
+                />
+            ))
+        } catch(e) {
+            return []
+        }
     }
 
     const unpackPost = () => {
@@ -70,8 +72,9 @@ export const Comments = () => {
     }
 
     useEffect(() => {
-        fetchAllPosts()
-    }, [])
+        setPostId(asPath.replace('/post/', ''))
+        fetchAllPosts(asPath.replace('/post/', ''))
+    }, [asPath])
 
     return (
         <div className={styles['desktop-wrapper']}>
