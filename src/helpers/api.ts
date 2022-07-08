@@ -1,5 +1,5 @@
-//export const API_URL = 'https://xonnected.herokuapp.com'
-export const API_URL = 'http://localhost:5000'
+export const API_URL = 'https://xonnected.herokuapp.com'
+//export const API_URL = 'http://localhost:5000'
 
 function authHeader(){
   let accessToken: string | null = localStorage.getItem('accessToken');
