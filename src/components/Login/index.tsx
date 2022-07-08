@@ -9,7 +9,6 @@ import { useRouter } from 'next/router';
 
 
 export function LoginPage(){
-  const API_URL_LOCAL = 'http://localhost:5000';
   const [showQrCode, setShowQrCode] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [email, setEmail] = useState('');
@@ -45,6 +44,7 @@ export function LoginPage(){
 
         if (error) {
           setIsError(true);
+          socket.disconnect();
         }
         else {
           if (qrCode) {
@@ -72,11 +72,8 @@ export function LoginPage(){
 
       socket.on("connect_error", () => {
         setIsError(true);
-      })
-
-      socket.on("connect_error", () => {
-        setIsError(true);
-        setShowQrCode(false)
+        setShowQrCode(false);
+        socket.disconnect();
       })
     }
   }
@@ -85,8 +82,6 @@ export function LoginPage(){
     setShowQrCode(false);
     setQrCodeError(false);
     setQrCodeSuccess(false);
-    socket.connect();
-    socket.disconnect();
   }
 
   const canLogIn = () => {
