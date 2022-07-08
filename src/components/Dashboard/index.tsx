@@ -6,7 +6,6 @@ import { Modal } from 'components/Shared';
 import { api } from "helpers";
 import { PostInterface, CONNECTION_STATUS } from 'helpers';
 import { useRouter } from 'next/router';
-import { CreatePost } from 'components/Shared';
 import { PostSubscriptionDto, API_URL } from 'helpers';
 import { io } from "socket.io-client";
 
@@ -146,7 +145,6 @@ export const Dashboard = () => {
             <div style={{width: '100%', padding: '20px', marginTop: '40px', alignItems: 'center', display: 'flex', flexDirection: 'column'}}>
                 { unPackPosts() }
             </div>
-            <CreatePost />
         </div>
     )
 };
