@@ -5,6 +5,7 @@ import { Post } from "components/Shared/Post";
 import { api } from "helpers";
 import { PostInterface } from 'helpers';
 import { useRouter } from 'next/router';
+import { CreatePost } from 'components/Shared';
 
 export const Dashboard = () => {
     const { push } = useRouter();
@@ -44,11 +45,13 @@ export const Dashboard = () => {
     
     return (
         <div className={styles['desktop-wrapper']}>
+            
             <Navbar />
 
             <div style={{width: '100%', padding: '20px', marginTop: '40px', alignItems: 'center', display: 'flex', flexDirection: 'column'}}>
                 { unPackPosts() }
             </div>
+            <CreatePost />
         </div>
     )
 };
