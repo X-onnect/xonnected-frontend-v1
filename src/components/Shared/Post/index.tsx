@@ -21,11 +21,12 @@ interface PostProp {
     likePost: (id: string) => any;
     unlikePost: (id: string) => any;
     subscribeToPost: (data: PostSubscriptionDto) => any;
+    commentOnPost?: (id: string) => any;
 }
 
 export const Post = (prop: PostProp) => {
     const { push } = useRouter();
-    const { data, likePost, unlikePost, subscribeToPost } = prop;
+    const { data, likePost, unlikePost, subscribeToPost, commentOnPost = () => {} } = prop;
 
     const [imageStyle, setImageStyle] = useState<ImageDimension>({ width: '100%' });
     const [userInfo, setUserInfo] = useState<User>();
@@ -156,7 +157,8 @@ export const Post = (prop: PostProp) => {
                         }
 
                         <p className={styles['text']}>{data.comments.length}</p>
-                        <FaRegCommentDots className={styles['icon']} size={25}/>
+
+                        <FaRegCommentDots className={styles['icon']} size={25} onClick={() => commentOnPost(data._id)}/>
                     </div>
                 </div>
             </div>
@@ -165,7 +167,7 @@ export const Post = (prop: PostProp) => {
                 !data.canBeViewed &&
                 <div className={styles['payment-request-wrapper']} onClick={subscribe}>
                     <BsCashCoin className={styles['icon']} size={30}/>
-                    <p className={styles['text']}>Click here to pay and view this post.</p>
+                    <p className={styles['text']}>{`Click here to pay ${data.price} XRP and view this post.`}</p>
                 </div>
             }
         </div>

@@ -7,6 +7,9 @@ import { api } from "helpers";
 import { PostInterface, CONNECTION_STATUS } from 'helpers';
 import { useRouter } from 'next/router';
 import { PostSubscriptionDto, API_URL } from 'helpers';
+import { CreatePost } from 'components/Shared';
+import { SpinnerCircular } from 'spinners-react'
+import { TbMessagePlus } from 'react-icons/tb';
 import { io } from "socket.io-client";
 
 export const Dashboard = () => {
@@ -17,12 +20,18 @@ export const Dashboard = () => {
     const [qrCodeUrl, setQrCodeUrl] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const [showCreateCommentModal, setShowCreateCommentModal] = useState(false);
+    const [postId, setPostId] = useState('');
+
+    const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+
     const [qrCodeError, setQrCodeError] = useState(false);
     const [qrCodeSuccess, setQrCodeSuccess] = useState(false);
 
     const socket = io(API_URL, { autoConnect: false });
 
     const fetchAllPosts =  async() => {
+        setLoading(true);
         const response = await api.get('post/all');
 
         if (response.statusCode === 401) push('/');
@@ -35,18 +44,24 @@ export const Dashboard = () => {
             setPosts(sortedPosts);
         }
         catch (e) { console.log(e) }
+
+        setLoading(false);
     }
 
     const handleLikePost = async (id: string) => {
+        setLoading(true);
         const response = await api.get(`post/like/${id}`);
         if (response.statusCode === 401) push('/');
-        fetchAllPosts();
+        await fetchAllPosts();
+        setLoading(false);
     }
 
     const handleDisLikePost = async (id: string) => {
+        setLoading(true);
         const response = await api.get(`post/dislike/${id}`);
         if (response.statusCode === 401) push('/');
-        fetchAllPosts();
+        await fetchAllPosts();
+        setLoading(false);
     }
 
     const subscribeToPost = async (info: PostSubscriptionDto) => {
@@ -96,10 +111,36 @@ export const Dashboard = () => {
 
         socket.emit('request-payment', JSON.stringify(requestObject));
 
-        socket.on("connect_error", () => {
+        socket.on("connect_error", (error) => {
+            console.log('connection error')
+            console.log(error)
             setShowQrCode(false);
+            setLoading(false);
             socket.disconnect();
         });
+
+        socket.on("disconnect", () => {
+            console.log('disconnected')
+            setLoading(false);
+        });
+    }
+
+    const onComment = (id: string) => {
+        setPostId(id);
+        setShowCreateCommentModal(true);
+    }
+
+    const onCreatePost = () => setShowCreatePostModal(true);
+
+    const closeCommentModal = () => {
+        setPostId('')
+        setShowCreateCommentModal(false);
+        setShowCreatePostModal(false);
+    }
+
+    const refreshPosts = async () => {
+        await fetchAllPosts();
+        closeCommentModal();
     }
 
     const unPackPosts = () => {
@@ -110,6 +151,7 @@ export const Dashboard = () => {
                 likePost = { handleLikePost }
                 unlikePost = { handleDisLikePost }
                 subscribeToPost = { subscribeToPost }
+                commentOnPost = { onComment }
             />
         ))
     }
@@ -133,6 +175,36 @@ export const Dashboard = () => {
     return (
         <div className={styles['desktop-wrapper']}>
             <Navbar />
+
+            {
+                loading &&
+                <div className={styles['overlay']}>
+                    <SpinnerCircular size={50} speed={200} color={'white'}/>
+                </div>
+            }
+
+            <div className={styles['create-post-wrapper']} onClick={onCreatePost}>
+                <abbr title='Make a new post.'><TbMessagePlus className={styles['icon']} size = {40}/></abbr>
+            </div>
+
+            {
+                showCreateCommentModal &&
+                <CreatePost 
+                    isComment = { true }
+                    id = { postId }
+                    handleClose = { closeCommentModal }
+                    refresh = { refreshPosts }
+                />
+            }
+
+            {
+                showCreatePostModal &&
+                <CreatePost 
+                    isComment = { false }
+                    handleClose = { closeCommentModal }
+                    refresh = { refreshPosts }
+                />
+            }
 
             {
                 showQrCode &&

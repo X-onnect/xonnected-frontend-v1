@@ -37,10 +37,11 @@ export function CreatePost({ isComment, handleClose, refresh, id } : CreatePostP
   const handleSubmit = async () => {
     setError(false)
     setLoading(true)
-    const payload = isComment ? { image, text, isFree: true, price: 0 } : { image, text, isFree, price: parseInt(price) }
+    const payload = isComment ? { image, text, isFree: true, price: 0 } : { image, text, isFree, price: parseFloat(price) }
     const response = isComment? await api.post(`post/comment/${id}`, payload): await api.post('post', payload)
     setLoading(false)
-    if(response.error) {
+
+    if(response.error || response.statusCode === 413) {
       setError(true)
     }
     else{
@@ -97,7 +98,7 @@ export function CreatePost({ isComment, handleClose, refresh, id } : CreatePostP
           {
             error && 
             <small className={styles.feedback}>
-              Upload failed. Please try again
+              Upload failed. Please choose an image size less than 5mb.
             </small>
           }
           {

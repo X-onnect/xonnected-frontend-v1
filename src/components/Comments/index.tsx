@@ -6,13 +6,16 @@ import { Modal } from 'components/Shared';
 import { api } from "helpers";
 import { PostInterface, CONNECTION_STATUS } from 'helpers';
 import { useRouter } from 'next/router';
-import { PostSubscriptionDto, API_URL } from 'helpers';
+import { CreatePost } from 'components/Shared';
 
 export const Comments = () => {
     const { asPath, push } = useRouter();
     const [postId, setPostId] = useState('');
     const [post, setPost] = useState<PostInterface>();
     const [comments, setComments] = useState<PostInterface[]>([]);
+
+    const [showCreateCommentModal, setShowCreateCommentModal] = useState(false);
+    const [parentId, setParentId] = useState('');
 
     const fetchAllPosts =  async(id: string) => {
         const response = await api.get(`post/id/${id}`);
@@ -22,8 +25,6 @@ export const Comments = () => {
 
         setPost(sortedPost);
         setComments(sortedPost.comments);
-
-        console.log(response)
     }
 
     const handleLikePost = async (id: string) => {
@@ -38,6 +39,21 @@ export const Comments = () => {
         fetchAllPosts(postId);
     }
 
+    const onComment = (id: string) => {
+        setParentId(id);
+        setShowCreateCommentModal(true);
+    }
+
+    const closeCommentModal = () => {
+        setParentId('')
+        setShowCreateCommentModal(false);
+    }
+
+    const refreshPosts = async () => {
+        await fetchAllPosts(postId);
+        closeCommentModal();
+    }
+
     const unpackComments = () => {
         try {
             return comments.map((comment) => (
@@ -47,6 +63,7 @@ export const Comments = () => {
                     likePost = { handleLikePost }
                     unlikePost = { handleDisLikePost }
                     subscribeToPost = { () => {} }
+                    commentOnPost = { onComment }
                 />
             ))
         } catch(e) {
@@ -63,6 +80,7 @@ export const Comments = () => {
                     likePost = { handleLikePost }
                     unlikePost = { handleDisLikePost }
                     subscribeToPost = { () => {} }
+                    commentOnPost = { onComment }
                 />
             )
         }
@@ -79,6 +97,16 @@ export const Comments = () => {
     return (
         <div className={styles['desktop-wrapper']}>
             <Navbar />
+
+            {
+                showCreateCommentModal &&
+                <CreatePost 
+                    isComment = { true }
+                    id = { parentId }
+                    handleClose = { closeCommentModal }
+                    refresh = { refreshPosts }
+                />
+            }
 
             <div className={styles['post-wrapper']}>
                 { unpackPost() }
