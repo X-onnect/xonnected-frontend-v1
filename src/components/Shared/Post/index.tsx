@@ -89,6 +89,12 @@ export const Post = (prop: PostProp) => {
 
         subscribeToPost(info);
     }
+    
+    const viewFullPost = () => {
+        if (data.canBeViewed) {
+            push(`/post/${data._id}`);
+        }
+    }
 
     useEffect(() => {
         getUserInfo();
@@ -108,7 +114,7 @@ export const Post = (prop: PostProp) => {
     return (
         <div className={styles['post-wrapper']}>
             <div className= { classNames(styles['image-holder'], data.image? '' : styles['no-image']) }>
-                <div className={`${styles['profile-banner']}`}>
+                <div className={`${styles['profile-banner']}`} onClick={viewFullPost}>
                     <img 
                         className={classNames(styles['profile'])}
                         src = { profileImagePlaceholder }
