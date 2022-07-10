@@ -4,16 +4,20 @@ import { Navbar } from "components/Shared/Navbar";
 import { Post } from "components/Shared/Post";
 import { Modal } from 'components/Shared';
 import { api } from "helpers";
-import { PostInterface, CONNECTION_STATUS } from 'helpers';
+import { PostInterface, CONNECTION_STATUS, SubscriptionType, User } from 'helpers';
 import { useRouter } from 'next/router';
 import { PostSubscriptionDto, API_URL } from 'helpers';
 import { CreatePost } from 'components/Shared';
-import { SpinnerCircular } from 'spinners-react'
+import { SpinnerCircular } from 'spinners-react';
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from 'shared/state/user';
 import { TbMessagePlus } from 'react-icons/tb';
 import { io } from "socket.io-client";
 
 export const Dashboard = () => {
     const { push } = useRouter();
+
+    const setLoggedInUser = useSetRecoilState(userAtom);
 
     const [posts, setPosts] = useState<PostInterface[]>([]);
     const [showQrCode, setShowQrCode] = useState(false);
@@ -29,6 +33,16 @@ export const Dashboard = () => {
     const [qrCodeSuccess, setQrCodeSuccess] = useState(false);
 
     const socket = io(API_URL, { autoConnect: false });
+
+    const getLoggedInUserInfo = async () => {
+        const response = await api.get('auth/user');
+
+        if (response.statusCode === 401) {
+            push('/');
+        }
+
+        setLoggedInUser(response);
+    }
 
     const fetchAllPosts =  async() => {
         setLoading(true);
@@ -64,7 +78,7 @@ export const Dashboard = () => {
         setLoading(false);
     }
 
-    const subscribeToPost = async (info: PostSubscriptionDto) => {
+    const subscribeToPost = async (info: PostSubscriptionDto, type: SubscriptionType) => {
         setLoading(true);
 
         const token = localStorage.getItem("accessToken");
@@ -96,12 +110,13 @@ export const Dashboard = () => {
                     }
 
                     if (status === CONNECTION_STATUS.SUCCESSFUL) {
-                        const response = await api.get(`post/subscribe-to-post/${info.postId}`);
+                        const apiPath = type === SubscriptionType.POST_SUBSCRIPTION? `subscribe-to-post/${info.postId}` : `subscribe-to-user/${info.postCreatorId}`;
+                        const response = await api.get(`post/${apiPath}`);
 
                         if (response.statusCode === 401) push('/');
 
                         setQrCodeSuccess(true);
-                        fetchAllPosts();
+                        await fetchAllPosts();
                         socket.disconnect();
                     }
 
@@ -165,16 +180,17 @@ export const Dashboard = () => {
     const generateQrCodeMessage = () => {
         if (qrCodeSuccess) return `Payment made successfully!`
         else if (qrCodeError) return `There was an error connecting to your wallet. Please try again.`
-        else return "Check the Requests tab of your Xumm App to approve the transaction or scan the QR code below."
+        else return "Check the Events tab of your Xumm App to approve the transaction or scan the QR code below."
       }
 
     useEffect(() => {
+        getLoggedInUserInfo()
         fetchAllPosts();
     }, []);
     
     return (
         <div className={styles['desktop-wrapper']}>
-            <Navbar />
+            <Navbar/>
 
             {
                 loading &&
@@ -209,7 +225,7 @@ export const Dashboard = () => {
             {
                 showQrCode &&
                 <Modal header={generateQrCodeMessage()} canClose handleClose={hideQrCode}>
-                <img src={qrCodeUrl} className={styles['qr-code']}/>
+                    <img src={qrCodeUrl} className={styles['qr-code']}/>
                 </Modal>
             }
 
