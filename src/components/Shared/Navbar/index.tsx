@@ -6,10 +6,14 @@ import { BsSearch, BsShare } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { HiInboxIn } from 'react-icons/hi';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
+import { useRecoilValue } from 'recoil';
+import { usernameAtom } from 'shared/state/user';
 import { AiOutlineHome } from 'react-icons/ai';
 import { MdOutlineNotifications } from 'react-icons/md';
 
 export const Navbar = () => {
+    const username = useRecoilValue(usernameAtom);
+
     const [isOpen, setIsOpen] = useState(false);
     const { push } = useRouter();
 
@@ -39,6 +43,8 @@ export const Navbar = () => {
 
                     <div className={styles.header}>
                         <p>Menu</p>
+                        <p style={{flex: 1}}></p>
+                        <p style={{marginRight: 10, textDecoration: 'none'}}>{username? `@${username}` : ''}</p>
                     </div>
 
                     <div className={styles['nav-item']}>
@@ -116,14 +122,15 @@ export const Navbar = () => {
                 </div>
 
                 <div className={styles['icon-wrapper']}>
-                    <AiOutlineHome 
+                    <p className={styles['icon']}>{username? `@${username}` : ''}</p>
+                    {/* <AiOutlineHome 
                         className={styles['icon']}
                         size = { 20 }
                     />
                     <MdOutlineNotifications
                         className={styles['icon']}
                         size = { 20 }
-                    />
+                    /> */}
                     <CgProfile 
                         className={styles['icon']}
                         size = { 20 }
@@ -135,6 +142,8 @@ export const Navbar = () => {
 
                     <div className={styles.header}>
                         <p>Menu</p>
+                        <p style={{flex: 1}}></p>
+                        <p style={{marginRight: 15, textDecoration: 'none'}}>{username? `@${username}` : ''}</p>
                     </div>
 
                     <div className={styles['nav-item']}>
