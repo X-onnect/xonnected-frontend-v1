@@ -7,14 +7,17 @@ import { CgProfile } from 'react-icons/cg';
 import { HiInboxIn } from 'react-icons/hi';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
 import { useRecoilValue } from 'recoil';
-import { usernameAtom } from 'shared/state/user';
+import { usernameAtom, userAtom } from 'shared/state/user';
 import { AiOutlineHome } from 'react-icons/ai';
 import { MdOutlineNotifications } from 'react-icons/md';
+import { Profile } from 'components/Dashboard/Profile';
 
 export const Navbar = () => {
     const username = useRecoilValue(usernameAtom);
+    const user = useRecoilValue(userAtom)
 
     const [isOpen, setIsOpen] = useState(false);
+    const [ viewProfile, setViewProfile ] =  useState(false)
     const { push } = useRouter();
 
     const logout = () => {
@@ -22,8 +25,19 @@ export const Navbar = () => {
         push('/');
     }
 
+    const toggleViewProfile = () => {
+        setViewProfile( open => !open)
+    }
+
     return (
         <>
+            <Profile 
+                displayName={user?.profile.displayName || ''}
+                image={user?.profile.image || ''}
+                subscriptionPrice={user?.profile.subscriptionPrice || ''}
+                isOpen={viewProfile} 
+                handleClose={toggleViewProfile}
+            />
             <div className={styles['navbar-wrapper-mobile']}>
                 <GiHamburgerMenu 
                     className={styles['hamburger']}
@@ -47,7 +61,7 @@ export const Navbar = () => {
                         <p style={{marginRight: 10, textDecoration: 'none'}}>{username? `@${username}` : ''}</p>
                     </div>
 
-                    <div className={styles['nav-item']}>
+                    <div className={styles['nav-item']} onClick={toggleViewProfile}>
                         <CgProfile 
                             className={styles['icon']}
                             size = { 16 }
@@ -130,8 +144,10 @@ export const Navbar = () => {
                     <MdOutlineNotifications
                         className={styles['icon']}
                         size = { 20 }
+                    />
                     /> */}
                     <CgProfile 
+                        onClick={toggleViewProfile}
                         className={styles['icon']}
                         size = { 20 }
                     />
@@ -146,7 +162,7 @@ export const Navbar = () => {
                         <p style={{marginRight: 15, textDecoration: 'none'}}>{username? `@${username}` : ''}</p>
                     </div>
 
-                    <div className={styles['nav-item']}>
+                    <div className={styles['nav-item']} onClick={toggleViewProfile}>
                         <CgProfile 
                             className={styles['icon']}
                             size = { 16 }
