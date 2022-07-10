@@ -118,7 +118,7 @@ export const Navbar = () => {
                     onClick = {() => { setIsOpen(!isOpen); }}
                 />
 
-                <div className={styles['logo-text']}>
+                <div className={styles['logo-text']} onClick={() => push('/feed')}>
                     <p>X<span className={styles['smaller']}>onnected</span></p>
                 </div>
 

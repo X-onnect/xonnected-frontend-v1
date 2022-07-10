@@ -134,7 +134,7 @@ export function LoginPage(){
             <label>{ isError? `Invalid email and/or password. Also check your connection.` : ' ' }</label>
           </div>
 
-          <Button size="md" onClick={onLogIn} disabled={!canLogIn()} loading={loading}>Log In</Button>
+          <Button size="md" onClick={onLogIn} disabled={!canLogIn()} loading={loading}>Connect with Xumm</Button>
         </div>
 
       </div>
