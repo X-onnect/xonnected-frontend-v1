@@ -60,7 +60,7 @@ export function LoginPage(){
 
             if (status === CONNECTION_STATUS.SUCCESSFUL) {
               setQrCodeSuccess(true);
-              push('/dashboard');
+              push('/feed');
               socket.disconnect();
             }
           }
