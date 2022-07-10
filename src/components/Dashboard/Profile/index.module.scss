@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@300&family=Noto+Sans&display=swap');
+
+.profile-wrapper{
+  animation: fade-in 0.8s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(19, 17, 17, 0.8);
+  display: flex;
+  align-items: flex-start;
+  justify-content: right;
+  z-index: 10000;
+  &.close{
+    animation: fade-out 1s;
+    display: none;
+  }
+}
+
+.profile{
+  animation: slide 0.5s;
+  width: 80%;
+  height: 100%;
+  padding: 10px;
+  background-color: rgb(204, 201, 201);
+  box-shadow: 0px 3px 12px rgba(8, 8, 8, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 768px) {
+    width: 500px;
+    padding: 15px;
+  }
+}
+
+.close-icon{
+  font-size: 20px;
+  cursor: pointer;
+  margin: 5px;
+  align-self: flex-start;
+}
+
+.profile-picture{
+  position: relative;
+  border-radius: 100%;
+  height: 150px;
+  width: 150px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+
+  @media (min-width: 768px) {
+    height: 350px;
+    width: 350px;
+  }
+}
+
+.change-profile-pic-wrapper{
+  background-color: rgba(223, 230, 230, 0.1);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  &:hover{
+    opacity: 1;
+  }
+}
+
+.change-profile-pic{
+  cursor: pointer;
+  font-size: 30px;
+  input{
+    display: none;
+  }
+  @media (min-width: 768px) {
+    font-size: 50px;
+  }
+}
+
+.form-row{
+  align-self: flex-start;
+  padding: 0px 15px;
+  width: 100%;
+  margin: 20px 0px;
+  display: flex;
+  label{
+    flex: 60%;
+    font-size: 12px;
+    font-weight: 600;
+    align-self: center;
+  }
+  input{
+    background-color: rgb(204, 201, 201);
+    border: none;
+    height: 25px;
+    padding: 1px 6px;
+    font-size: 12px;
+    flex: 40%;
+  }
+
+  @media (min-width: 768px) {
+    margin: 25px 0px;
+    label{
+      font-size: 14px;
+    }
+    input{
+      height: 30px;
+      padding: 2px 10px;
+      font-size: 14px;
+    }
+  }
+
+
+}
+
+.submit-button{
+  width: 100%;
+  height: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: 'Montserrat' sans-serif;
+  background-color: rgb(54, 51, 49);
+  color: white;
+
+  &:hover{
+    filter: brightness(80%);
+    transform: scale(104%);
+  }
+
+  &:disabled{
+    cursor:not-allowed;
+    filter: brightness(200%);
+    &:hover{
+      transform: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    height: 35px;
+  }
+}
+
+.feedback{
+  font-size: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: red;
+  @media (min-width: 768px) {
+    font-size: 11px;
+  }
+}
+
+@keyframes slide {
+  from{
+    margin-left: 100%;
+  }
+  to{
+    margin-left: 0%;
+  }
+}
+
+@keyframes fade-in {
+  from{
+    background-color: rgba(19, 17, 17, 0.1);
+  } 
+  to{
+    background-color: rgba(19, 17, 17, 0.8);
+  }
+}
+
+@keyframes fade-out {
+  from{
+    opacity: 1;
+  }
+  to{
+    opacity: 0;
+  }
+}

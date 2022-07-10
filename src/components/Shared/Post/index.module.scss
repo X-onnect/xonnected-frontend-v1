@@ -1,0 +1,272 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@300&family=Noto+Sans&display=swap');
+
+.post-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    background-color: #FFF;
+    overflow: hidden;
+    margin-bottom: 40px;
+
+    @media (min-width: 768px) {
+        width: 80%;
+    }
+
+    .image-holder {
+        height: 300px;
+        width: 100%;
+        background-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow-y: hidden;
+
+        @media (min-width: 768px) {
+            height: 700px;
+        }
+
+        .profile-banner {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 50px;
+            min-width: 138px;
+            background-color: #E8E8E8;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 0 6px;
+            opacity: 0.3;
+            z-index: 11;
+            cursor: pointer;
+
+            img.profile {
+                height: 20px;
+                width: 20px;
+                border-radius: 20px;
+
+                @media (min-width: 768px) {
+                    height: 25px;
+                    width: 25px;
+                    border-radius: 25px;
+                }
+            }
+
+            .profile-name {
+                padding: 0 7px;
+                display: flex;
+                flex-direction: column;
+
+                p.display-name {
+                    font-family: 'Montserrat';
+                    font-weight: 700;
+                    font-size: 12px;
+                    line-height: 10px;
+                    color: #3A3A3A;
+                    padding-bottom: 5px;
+                    text-transform: capitalize;
+                }
+
+                p.username {
+                    font-family: 'Montserrat';
+                    font-weight: 400;
+                    font-size: 10px;
+                    line-height: 7px;
+                    color: #3A3A3A;
+                }
+            }
+
+            .icon {
+                color: #3a3a3a;
+                padding-right: 6px;
+                cursor: pointer;
+            }
+        }
+
+        .profile-banner:hover {
+            opacity: 1;
+        }
+    }
+
+    .no-image {
+        height: 70px;
+        background-color: #303030;
+
+        .profile-banner {
+            opacity: 1;
+            border-radius: 10px 10px 0 0;
+        }
+    }
+
+    .text-holder {
+        width: 100%;
+        min-height: 95px;
+        padding: 20px;
+
+        @media (min-width: 768px) {
+            padding: 40px;
+        }
+
+        .heading p {
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 18px;
+            color: #141414;
+            margin-bottom: 8px;
+
+            @media (min-width: 768px) {
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+        }
+
+        .content p {
+            font-family: 'Montserrat';
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 16px;
+            color: #000000;
+
+            @media (min-width: 768px) {
+                font-size: 16px;
+                line-height: 22px;
+            }
+        }
+
+        .button-holder {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            padding-top: 10px;
+
+            @media (min-width: 768px) {
+                padding-top: 15px;
+            }
+
+            .icon-holder {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 50px;
+                min-width: 100px;
+                background-color: #FFF;
+                box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+                border-radius: 20px;
+                padding: 0 0 0 10px;
+
+                .icon {
+                    color: #3a3a3a;
+                    padding-right: 10px;
+                    cursor: pointer;
+                }
+
+                p.text {
+                    color: #303030;
+                    font-size: 14px;
+                    font-weight: 500;
+                    padding-right: 5px;
+                }
+            }
+
+            .icon-holder:hover {
+                background-color: #3a3a3a;
+                .icon {
+                    color: #FFF;
+                    transform: scale(1.2);
+                }
+
+                .icon:hover {
+                    transform: scale(1.4);
+                }
+                p.text{
+                    color: #FFF;
+                    transform: scale(1.2);
+                }
+            }
+        }
+    }
+}
+
+button.button-white {
+    height: 32px;
+    border-radius: 65px;
+    border: 0.8px solid #4A4A4A;
+    background-color: #FFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 10px;
+    color: #4A4A4A;
+    padding: 0 13px;
+}
+
+.blur {
+    opacity: 1;
+    filter: blur(15px)
+}
+
+.vertical-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    position: absolute;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .payment-request-wrapper {
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        min-width: 200px;
+        background-color: #FFF;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        padding: 0 0 0 10px;
+        cursor: pointer;
+
+        .icon {
+            color: #3a3a3a;
+            cursor: pointer;
+        }
+
+        p.text {
+            color: #303030;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px;
+            font-family: "Montserrat";
+
+            @media (min-width: 768px) {
+                font-size: 14px;
+                padding: 15px;
+            }
+        }
+
+    }
+
+    .payment-request-wrapper.margin-top {
+        margin-top: 10px;
+
+        @media (min-width: 768px) {
+            margin-top: 40px;
+        }
+    }
+}
