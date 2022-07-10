@@ -3,11 +3,13 @@ import styles from './index.module.scss';
 import { PostInterface, User, api, profileImagePlaceholder } from 'helpers';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import { PostSubscriptionDto } from 'helpers';
+import { PostSubscriptionDto, SubscriptionType } from 'helpers';
 import { BsFillHandThumbsUpFill, BsCashCoin } from 'react-icons/bs';
 import { MdOutlineWavingHand } from 'react-icons/md';
 import { AiOutlineMail } from 'react-icons/ai';
 import { TbDotsVertical } from 'react-icons/tb';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from 'shared/state/user';
 import { FiThumbsUp } from 'react-icons/fi'
 import { FaRegCommentDots } from 'react-icons/fa';
 
@@ -20,7 +22,7 @@ interface PostProp {
     data: PostInterface;
     likePost: (id: string) => any;
     unlikePost: (id: string) => any;
-    subscribeToPost: (data: PostSubscriptionDto) => any;
+    subscribeToPost: (data: PostSubscriptionDto, type: SubscriptionType) => any;
     commentOnPost?: (id: string) => any;
 }
 
@@ -30,7 +32,7 @@ export const Post = (prop: PostProp) => {
 
     const [imageStyle, setImageStyle] = useState<ImageDimension>({ width: '100%' });
     const [userInfo, setUserInfo] = useState<User>();
-    const [loggedInUser, setLoggedInUser] = useState<User>();
+    const loggedInUser = useRecoilValue(userAtom);
 
     const getUserInfo = async () => {
         const response = await api.get(`user/${data.createdBy}`);
@@ -40,16 +42,6 @@ export const Post = (prop: PostProp) => {
         }
 
         setUserInfo(response);
-    }
-
-    const getLoggedInUserInfo = async () => {
-        const response = await api.get('auth/user');
-
-        if (response.statusCode === 401) {
-            push('/');
-        }
-
-        setLoggedInUser(response);
     }
 
     const resizeImage = () => {
@@ -81,14 +73,14 @@ export const Post = (prop: PostProp) => {
         }
     }
 
-    const subscribe = () => {
+    const subscribe = (type: SubscriptionType) => {
         const info: PostSubscriptionDto = {
-            amount: data.price,
+            amount: type === SubscriptionType.POST_SUBSCRIPTION? data.price : parseFloat(userInfo?.profile.subscriptionPrice || '0'),
             postId: data._id,
             postCreatorId: data.createdBy,
         };
 
-        subscribeToPost(info);
+        subscribeToPost(info, type);
     }
     
     const viewFullPost = () => {
@@ -99,7 +91,6 @@ export const Post = (prop: PostProp) => {
 
     useEffect(() => {
         getUserInfo();
-        getLoggedInUserInfo();
 
         resizeImage()
 
@@ -118,11 +109,11 @@ export const Post = (prop: PostProp) => {
                 <div className={`${styles['profile-banner']}`} onClick={viewFullPost}>
                     <img 
                         className={classNames(styles['profile'])}
-                        src = { profileImagePlaceholder }
+                        src = { userInfo?.profile.image || profileImagePlaceholder }
                     />
 
                     <div className={styles['profile-name']}>
-                        <p className={styles['display-name']}>{userInfo?.username || ''}</p>
+                        <p className={styles['display-name']}>{userInfo?.profile.displayName || userInfo?.username || ''}</p>
                         <p className={styles['username']}>{userInfo? `@${userInfo.username}` : ''}</p>
                     </div>
 
@@ -165,9 +156,19 @@ export const Post = (prop: PostProp) => {
 
             {
                 !data.canBeViewed &&
-                <div className={styles['payment-request-wrapper']} onClick={subscribe}>
-                    <BsCashCoin className={styles['icon']} size={30}/>
-                    <p className={styles['text']}>{`Click here to pay ${data.price} XRP and view this post.`}</p>
+                <div className={styles['vertical-wrapper']} style={{ zIndex: data.image? undefined : 12 }}>
+                    <div className={styles['payment-request-wrapper']} onClick={() => subscribe(SubscriptionType.POST_SUBSCRIPTION)}>
+                        <BsCashCoin className={styles['icon']} size={30}/>
+                        <p className={styles['text']}>{`Pay ${data.price} XRP to subscribe to this post.`}</p>
+                    </div>
+
+                    {
+                        ((userInfo?.profile.subscriptionPrice || 0) > 0) &&
+                        <div className={classNames(styles['payment-request-wrapper'], styles['margin-top'])} onClick={() => subscribe(SubscriptionType.USER_SUBSCRIPTION)}>
+                            <BsCashCoin className={styles['icon']} size={30}/>
+                            <p className={styles['text']}>{`Pay ${userInfo?.profile.subscriptionPrice} XRP to subscribe to @${userInfo?.username} and be able to view all posts by them.`}</p>
+                        </div>
+                    }
                 </div>
             }
         </div>

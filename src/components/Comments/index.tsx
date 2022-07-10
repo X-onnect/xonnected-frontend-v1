@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styles from "./index.module.scss";
 import { Navbar } from "components/Shared/Navbar";
 import { Post } from "components/Shared/Post";
-import { Modal } from 'components/Shared';
 import { api } from "helpers";
-import { PostInterface, CONNECTION_STATUS } from 'helpers';
+import { PostInterface } from 'helpers';
 import { useRouter } from 'next/router';
 import { CreatePost } from 'components/Shared';
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from 'shared/state/user';
 
 export const Comments = () => {
     const { asPath, push } = useRouter();
@@ -14,8 +15,20 @@ export const Comments = () => {
     const [post, setPost] = useState<PostInterface>();
     const [comments, setComments] = useState<PostInterface[]>([]);
 
+    const setLoggedInUser = useSetRecoilState(userAtom);
+
     const [showCreateCommentModal, setShowCreateCommentModal] = useState(false);
     const [parentId, setParentId] = useState('');
+
+    const getLoggedInUserInfo = async () => {
+        const response = await api.get('auth/user');
+
+        if (response.statusCode === 401) {
+            push('/');
+        }
+
+        setLoggedInUser(response);
+    }
 
     const fetchAllPosts =  async(id: string) => {
         const response = await api.get(`post/id/${id}`);
@@ -90,6 +103,7 @@ export const Comments = () => {
     }
 
     useEffect(() => {
+        getLoggedInUserInfo();
         setPostId(asPath.replace('/post/', ''))
         fetchAllPosts(asPath.replace('/post/', ''))
     }, [asPath])
