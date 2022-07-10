@@ -8,9 +8,11 @@ import { HiInboxIn } from 'react-icons/hi';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
 import { AiOutlineHome } from 'react-icons/ai';
 import { MdOutlineNotifications } from 'react-icons/md';
+import { Profile } from 'components/Dashboard/Profile';
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [ viewProfile, setViewProfile ] =  useState(false)
     const { push } = useRouter();
 
     const logout = () => {
@@ -18,8 +20,13 @@ export const Navbar = () => {
         push('/');
     }
 
+    const toggleViewProfile = () => {
+        setViewProfile( open => !open)
+    }
+
     return (
         <>
+            {/* <Profile isOpen={viewProfile} handleClose={toggleViewProfile}/> */}
             <div className={styles['navbar-wrapper-mobile']}>
                 <GiHamburgerMenu 
                     className={styles['hamburger']}
@@ -41,7 +48,7 @@ export const Navbar = () => {
                         <p>Menu</p>
                     </div>
 
-                    <div className={styles['nav-item']}>
+                    <div className={styles['nav-item']} onClick={toggleViewProfile}>
                         <CgProfile 
                             className={styles['icon']}
                             size = { 16 }
@@ -124,7 +131,8 @@ export const Navbar = () => {
                         className={styles['icon']}
                         size = { 20 }
                     />
-                    <CgProfile 
+                    <CgProfile
+                        onClick={toggleViewProfile}
                         className={styles['icon']}
                         size = { 20 }
                     />
@@ -137,7 +145,7 @@ export const Navbar = () => {
                         <p>Menu</p>
                     </div>
 
-                    <div className={styles['nav-item']}>
+                    <div className={styles['nav-item']} onClick={toggleViewProfile}>
                         <CgProfile 
                             className={styles['icon']}
                             size = { 16 }
