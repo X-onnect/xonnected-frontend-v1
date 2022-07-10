@@ -15,9 +15,9 @@ interface IProfileModal{
 }
 export function Profile({ isOpen, handleClose, image, displayName, subscriptionPrice } : IProfileModal){
   const fallbackImage = '/img/icons/default-image.jpg'
-  const [ dp, setDp ] = useState(image ? image : fallbackImage)
-  const [ name, setName ] = useState(displayName ? displayName : 'N/A')
-  const [ sub, setSub ] =  useState(subscriptionPrice ? subscriptionPrice : '0')
+  const [ dp, setDp ] = useState(image || fallbackImage)
+  const [ name, setName ] = useState(displayName || 'N/A')
+  const [ sub, setSub ] =  useState(subscriptionPrice || '0')
   const [ loading, setLoading ] = useState(false)
   const [ error, setError ] = useState(false)
   const [ success, setSuccess ] = useState(false)

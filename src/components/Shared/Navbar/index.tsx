@@ -7,13 +7,14 @@ import { CgProfile } from 'react-icons/cg';
 import { HiInboxIn } from 'react-icons/hi';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
 import { useRecoilValue } from 'recoil';
-import { usernameAtom } from 'shared/state/user';
+import { usernameAtom, userAtom } from 'shared/state/user';
 import { AiOutlineHome } from 'react-icons/ai';
 import { MdOutlineNotifications } from 'react-icons/md';
 import { Profile } from 'components/Dashboard/Profile';
 
 export const Navbar = () => {
     const username = useRecoilValue(usernameAtom);
+    const user = useRecoilValue(userAtom)
 
     const [isOpen, setIsOpen] = useState(false);
     const [ viewProfile, setViewProfile ] =  useState(false)
@@ -30,7 +31,13 @@ export const Navbar = () => {
 
     return (
         <>
-            {/* <Profile isOpen={viewProfile} handleClose={toggleViewProfile}/> */}
+            <Profile 
+                displayName={user?.profile.displayName || ''}
+                image={user?.profile.image || ''}
+                subscriptionPrice={user?.profile.subscriptionPrice || ''}
+                isOpen={viewProfile} 
+                handleClose={toggleViewProfile}
+            />
             <div className={styles['navbar-wrapper-mobile']}>
                 <GiHamburgerMenu 
                     className={styles['hamburger']}
