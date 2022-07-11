@@ -37,7 +37,7 @@ export function CreatePost({ isComment, handleClose, refresh, id } : CreatePostP
   const handleSubmit = async () => {
     setError(false)
     setLoading(true)
-    const payload = isComment ? { image, text, isFree: true, price: 0 } : { image, text, isFree, price: parseFloat(price) }
+    const payload = isComment ? { image, text, isFree: true, price: 0 } : { image, text, isFree, price: isFree? 0 : parseFloat(price) }
     const response = isComment? await api.post(`post/comment/${id}`, payload): await api.post('post', payload)
     setLoading(false)
 
